@@ -7,194 +7,457 @@
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --canvas: #FAF7F2; --surface: #FFFFFF; --border: #E8E4DD;
-  --text-primary: #2F3437; --text-secondary: #6B6B6B; --text-muted: #9B9B9B;
-  --accent-green-text: #346538; --accent-pale-green: #EDF3EC;
-  --accent-blue-text: #1F6C9F; --accent-pale-blue: #E1F3FE;
-  --accent-orange-text: #8B5A2B; --accent-pale-orange: #FFF3E0;
+  --canvas: #FAF7F2;
+  --surface: #FFFFFF;
+  --border: #E8E4DD;
+  --text-primary: #2F3437;
+  --text-secondary: #6B6B6B;
+  --text-muted: #9B9B9B;
+  --accent-green-text: #346538;
+  --accent-pale-green: #EDF3EC;
+  --accent-blue-text: #1F6C9F;
+  --accent-pale-blue: #E1F3FE;
+  --accent-orange-text: #8B5A2B;
+  --accent-pale-orange: #FFF3E0;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Inter', -apple-system, sans-serif; background: var(--canvas); color: var(--text-primary); overflow: hidden; height: 100vh; }
-.carousel { position: relative; width: 100%; height: 100vh; overflow: hidden; }
-.slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; opacity: 0; transform: translateX(60px); transition: opacity 0.5s ease, transform 0.5s ease; pointer-events: none; }
-.slide.active { opacity: 1; transform: translateX(0); pointer-events: auto; }
-.slide.prev { opacity: 0; transform: translateX(-60px); }
-.slide-left { flex: 1; display: flex; align-items: center; justify-content: center; padding: 48px; background: #F5F1EB; }
-.slide-left img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-.fallback { width: 320px; height: 320px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', serif; font-size: 120px; font-weight: 700; color: rgba(255,255,255,0.9); }
-.slide-right { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 48px 64px; overflow-y: auto; }
-.badge-row { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
-.lang-badge { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--text-secondary); }
-.lang-dot { width: 10px; height: 10px; border-radius: 50%; }
-.trend-badge { font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 12px; }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--canvas);
+  color: var(--text-primary);
+  overflow: hidden;
+  height: 100vh;
+}
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+}
+.slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.slide.prev {
+  opacity: 0;
+  transform: translateX(-60px);
+}
+.slide-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  background: #F5F1EB;
+}
+.slide-left img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+.fallback {
+  width: 320px;
+  height: 320px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Newsreader', serif;
+  font-size: 120px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.slide-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 64px;
+  overflow-y: auto;
+}
+.badge-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.lang-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.lang-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.trend-badge {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
 .trend-badge.hot { background: var(--accent-pale-orange); color: var(--accent-orange-text); }
 .trend-badge.warm { background: var(--accent-pale-blue); color: var(--accent-blue-text); }
 .trend-badge.cool { background: #F0F0F0; color: var(--text-secondary); }
-.category-badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 12px; background: var(--accent-pale-green); color: var(--accent-green-text); }
-.repo-name { font-family: 'Newsreader', serif; font-size: 36px; font-weight: 700; line-height: 1.2; margin-bottom: 12px; }
-.repo-name a { color: inherit; text-decoration: none; }
-.one-liner { font-size: 16px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; }
-.topics { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
-.topic-tag { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 12px; background: var(--accent-pale-blue); color: var(--accent-blue-text); }
-.stars-row { display: flex; gap: 24px; align-items: baseline; margin-bottom: 20px; }
-.stars-total { font-size: 28px; font-weight: 600; }
-.stars-today { font-size: 16px; font-weight: 500; color: var(--accent-green-text); background: var(--accent-pale-green); padding: 4px 12px; border-radius: 8px; }
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-.stat-item { font-size: 13px; color: var(--text-secondary); }
-.stat-item strong { color: var(--text-primary); font-weight: 500; }
-.activity-bar { width: 100%; height: 6px; background: #EEE; border-radius: 3px; margin-top: 4px; overflow: hidden; }
-.activity-fill { height: 100%; border-radius: 3px; }
-.avatars-row { display: flex; align-items: center; margin-bottom: 16px; }
-.avatars-row img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--canvas); margin-left: -6px; }
+.category-badge {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: var(--accent-pale-green);
+  color: var(--accent-green-text);
+}
+.repo-name {
+  font-family: 'Newsreader', serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+.repo-name a {
+  color: inherit;
+  text-decoration: none;
+}
+.one-liner {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.topics {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.topic-tag {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: var(--accent-pale-blue);
+  color: var(--accent-blue-text);
+}
+.stars-row {
+  display: flex;
+  gap: 24px;
+  align-items: baseline;
+  margin-bottom: 20px;
+}
+.stars-total {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.stars-today {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--accent-green-text);
+  background: var(--accent-pale-green);
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-item {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.stat-item strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.activity-bar {
+  width: 100%;
+  height: 6px;
+  background: #EEE;
+  border-radius: 3px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+.activity-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s ease;
+}
+.avatars-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.avatars-row img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--canvas);
+  margin-left: -6px;
+}
 .avatars-row img:first-child { margin-left: 0; }
-.nav-hint { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--text-muted); }
-.list-btn { position: fixed; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); z-index: 100; }
+.nav-hint {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+.list-btn {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  z-index: 100;
+  transition: transform 0.2s;
+}
+.list-btn:hover { transform: scale(1.05); }
 .list-btn svg { width: 20px; height: 20px; stroke: var(--text-secondary); }
-.drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 200; }
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 200;
+}
 .drawer-overlay.open { opacity: 1; pointer-events: auto; }
-.drawer { position: fixed; top: 0; right: 0; width: 420px; height: 100%; background: var(--canvas); transform: translateX(100%); transition: transform 0.35s ease; z-index: 201; overflow-y: auto; padding: 24px; }
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 420px;
+  height: 100%;
+  background: var(--canvas);
+  transform: translateX(100%);
+  transition: transform 0.35s ease;
+  z-index: 201;
+  overflow-y: auto;
+  padding: 24px;
+}
 .drawer.open { transform: translateX(0); }
-.drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-.drawer-header h2 { font-family: 'Newsreader', serif; font-size: 22px; font-weight: 600; }
-.drawer-close { width: 32px; height: 32px; border: none; background: none; cursor: pointer; font-size: 20px; color: var(--text-muted); }
-.drawer-item { padding: 14px 0; border-bottom: 1px solid var(--border); }
-.drawer-repo { font-weight: 500; font-size: 14px; margin-bottom: 4px; }
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.drawer-header h2 {
+  font-family: 'Newsreader', serif;
+  font-size: 22px;
+  font-weight: 600;
+}
+.drawer-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--text-muted);
+}
+.drawer-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.drawer-item:last-child { border-bottom: none; }
+.drawer-repo {
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
 .drawer-repo a { color: var(--text-primary); text-decoration: none; }
-.drawer-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.drawer-meta { display: flex; gap: 12px; font-size: 11px; color: var(--text-muted); }
-.slide-counter { position: fixed; top: 28px; left: 28px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-muted); z-index: 50; }
+.drawer-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.drawer-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.slide-counter {
+  position: fixed;
+  top: 28px;
+  left: 28px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text-muted);
+  z-index: 50;
+}
 @media (max-width: 768px) {
   .slide { flex-direction: column; }
   .slide-left { flex: none; height: 40vh; padding: 24px; }
   .slide-right { padding: 24px; }
   .repo-name { font-size: 24px; }
   .drawer { width: 100%; }
-  .fallback { width: 200px; height: 200px; font-size: 80px; }
+  .slide-left .fallback { width: 200px; height: 200px; font-size: 80px; }
 }
 </style>
 </head>
 <body>
-<div class="slide-counter"><span id="current">1</span> / <span id="total">10</span></div>
-<button class="list-btn" onclick="toggleDrawer()">
+
+<div class="slide-counter"><span id="current">1</span> / <span id="total">17</span></div>
+
+<button class="list-btn" onclick="toggleDrawer()" title="完整列表">
   <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
     <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
     <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
   </svg>
 </button>
+
 <div class="carousel" id="carousel"></div>
+
 <div class="nav-hint">← 滑动或方向键切换 →</div>
+
 <div class="drawer-overlay" id="overlay" onclick="toggleDrawer()"></div>
 <div class="drawer" id="drawer">
   <div class="drawer-header">
-    <h2>完整列表 · 16 项目</h2>
+    <h2>完整列表 · 17 项目</h2>
     <button class="drawer-close" onclick="toggleDrawer()">✕</button>
   </div>
   <div id="drawer-list"></div>
 </div>
+
 <script>
-const DATA = [{"rank": 1, "repo": "google-labs-code/design.md", "url": "https://github.com/google-labs-code/design.md", "description": "A format specification for describing a visual identity to coding agents. DESIGN.md gives agents a persistent, structured understanding of a design system.", "language": "TypeScript", "totalStars": 20329, "totalForks": 1684, "starsToday": 1475, "source": "All", "descZh": "Google 官方推出的 DESIGN.md 格式规范，让 AI 编程助手能理解和遵循你的设计系统。", "trendLabel": "高速增长 🔥", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 2, "repo": "calesthio/OpenMontage", "url": "https://github.com/calesthio/OpenMontage", "description": "World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.", "language": "Python", "totalStars": 22934, "totalForks": 2553, "starsToday": 3434, "source": "All", "descZh": "World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.", "trendLabel": "爆发期 🚀", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 3, "repo": "xbtlin/ai-berkshire", "url": "https://github.com/xbtlin/ai-berkshire", "description": "AI 时代的伯克希尔：基于 Claude Code 的价值投资研究框架。", "language": "Python", "totalStars": 2744, "totalForks": 394, "starsToday": 309, "source": "All", "descZh": "AI 时代的伯克希尔：基于 Claude Code 的价值投资研究框架，融合巴菲特、芒格、段永平、李录四位大师方法论。", "trendLabel": "爆发期 🚀", "activityScore": 60, "categoryTag": "AI / Agent"}, {"rank": 4, "repo": "mauriceboe/TREK", "url": "https://github.com/mauriceboe/TREK", "description": "A self-hosted travel/trip planner with real-time collaboration, interactive maps, PWA support.", "language": "TypeScript", "totalStars": 7179, "totalForks": 633, "starsToday": 241, "source": "All", "descZh": "A self-hosted travel/trip planner with real-time collaboration, interactive maps, PWA support.", "trendLabel": "高速增长 🔥", "activityScore": 60, "categoryTag": "通用"}, {"rank": 5, "repo": "apple/container", "url": "https://github.com/apple/container", "description": "A tool for creating and running Linux containers using lightweight virtual machines on a Mac.", "language": "Swift", "totalStars": 43486, "totalForks": 1276, "starsToday": 1351, "source": "All", "descZh": "Apple 官方出品，在 Mac 上用轻量虚拟机创建和运行 Linux 容器。Swift 编写，Apple Silicon 原生优化。", "trendLabel": "高速增长 🔥", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 6, "repo": "JCodesMore/ai-website-cloner-template", "url": "https://github.com/JCodesMore/ai-website-cloner-template", "description": "Clone any website with one command using AI coding agents", "language": "TypeScript", "totalStars": 20951, "totalForks": 3057, "starsToday": 1024, "source": "All", "descZh": "Clone any website with one command using AI coding agents", "trendLabel": "高速增长 🔥", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 7, "repo": "every-app/open-seo", "url": "https://github.com/every-app/open-seo", "description": "Open source alternative to Semrush and Ahrefs", "language": "TypeScript", "totalStars": 2883, "totalForks": 328, "starsToday": 57, "source": "All", "descZh": "开源的 Semrush 和 Ahrefs 替代品，SEO 分析工具。", "trendLabel": "稳步增长 ⚡", "activityScore": 50, "categoryTag": "通用"}, {"rank": 8, "repo": "garrytan/gstack", "url": "https://github.com/garrytan/gstack", "description": "Use Garry Tan's exact Claude Code setup: 23 opinionated tools", "language": "TypeScript", "totalStars": 116211, "totalForks": 17214, "starsToday": 767, "source": "All", "descZh": "Y Combinator CEO Garry Tan 的 Claude Code 配置：23 个工具分别扮演 CEO、设计师、工程经理等角色。", "trendLabel": "成熟稳定 🏔️", "activityScore": 70, "categoryTag": "AI / Agent"}, {"rank": 9, "repo": "aws/agent-toolkit-for-aws", "url": "https://github.com/aws/agent-toolkit-for-aws", "description": "Official, AWS-supported MCP servers, skills, and plugins to help AI agents build on AWS", "language": "Python", "totalStars": 1233, "totalForks": 115, "starsToday": 47, "source": "All", "descZh": "AWS 官方支持的 MCP 服务器和技能集，帮助 AI 代理在 AWS 上构建应用。", "trendLabel": "高速增长 🔥", "activityScore": 50, "categoryTag": "AI / Agent"}, {"rank": 10, "repo": "mukul975/Anthropic-Cybersecurity-Skills", "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills", "description": "817 structured cybersecurity skills for AI agents", "language": "Python", "totalStars": 21586, "totalForks": 2479, "starsToday": 571, "source": "All", "descZh": "817 structured cybersecurity skills for AI agents", "trendLabel": "稳步增长 ⚡", "activityScore": 70, "categoryTag": "AI / Agent"}];
-const ALL_REPOS = [{"rank": 1, "repo": "google-labs-code/design.md", "url": "https://github.com/google-labs-code/design.md", "description": "A format specification for describing a visual identity to coding agents. DESIGN.md gives agents a persistent, structured understanding of a design system.", "language": "TypeScript", "totalStars": 20329, "totalForks": 1684, "starsToday": 1475, "source": "All", "descZh": "Google 官方推出的 DESIGN.md 格式规范，让 AI 编程助手能理解和遵循你的设计系统。", "trendLabel": "高速增长 🔥", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 2, "repo": "calesthio/OpenMontage", "url": "https://github.com/calesthio/OpenMontage", "description": "World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.", "language": "Python", "totalStars": 22934, "totalForks": 2553, "starsToday": 3434, "source": "All", "descZh": "World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.", "trendLabel": "爆发期 🚀", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 3, "repo": "xbtlin/ai-berkshire", "url": "https://github.com/xbtlin/ai-berkshire", "description": "AI 时代的伯克希尔：基于 Claude Code 的价值投资研究框架。", "language": "Python", "totalStars": 2744, "totalForks": 394, "starsToday": 309, "source": "All", "descZh": "AI 时代的伯克希尔：基于 Claude Code 的价值投资研究框架，融合巴菲特、芒格、段永平、李录四位大师方法论。", "trendLabel": "爆发期 🚀", "activityScore": 60, "categoryTag": "AI / Agent"}, {"rank": 4, "repo": "mauriceboe/TREK", "url": "https://github.com/mauriceboe/TREK", "description": "A self-hosted travel/trip planner with real-time collaboration, interactive maps, PWA support.", "language": "TypeScript", "totalStars": 7179, "totalForks": 633, "starsToday": 241, "source": "All", "descZh": "A self-hosted travel/trip planner with real-time collaboration, interactive maps, PWA support.", "trendLabel": "高速增长 🔥", "activityScore": 60, "categoryTag": "通用"}, {"rank": 5, "repo": "apple/container", "url": "https://github.com/apple/container", "description": "A tool for creating and running Linux containers using lightweight virtual machines on a Mac.", "language": "Swift", "totalStars": 43486, "totalForks": 1276, "starsToday": 1351, "source": "All", "descZh": "Apple 官方出品，在 Mac 上用轻量虚拟机创建和运行 Linux 容器。Swift 编写，Apple Silicon 原生优化。", "trendLabel": "高速增长 🔥", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 6, "repo": "JCodesMore/ai-website-cloner-template", "url": "https://github.com/JCodesMore/ai-website-cloner-template", "description": "Clone any website with one command using AI coding agents", "language": "TypeScript", "totalStars": 20951, "totalForks": 3057, "starsToday": 1024, "source": "All", "descZh": "Clone any website with one command using AI coding agents", "trendLabel": "高速增长 🔥", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 7, "repo": "every-app/open-seo", "url": "https://github.com/every-app/open-seo", "description": "Open source alternative to Semrush and Ahrefs", "language": "TypeScript", "totalStars": 2883, "totalForks": 328, "starsToday": 57, "source": "All", "descZh": "开源的 Semrush 和 Ahrefs 替代品，SEO 分析工具。", "trendLabel": "稳步增长 ⚡", "activityScore": 50, "categoryTag": "通用"}, {"rank": 8, "repo": "garrytan/gstack", "url": "https://github.com/garrytan/gstack", "description": "Use Garry Tan's exact Claude Code setup: 23 opinionated tools", "language": "TypeScript", "totalStars": 116211, "totalForks": 17214, "starsToday": 767, "source": "All", "descZh": "Y Combinator CEO Garry Tan 的 Claude Code 配置：23 个工具分别扮演 CEO、设计师、工程经理等角色。", "trendLabel": "成熟稳定 🏔️", "activityScore": 70, "categoryTag": "AI / Agent"}, {"rank": 9, "repo": "aws/agent-toolkit-for-aws", "url": "https://github.com/aws/agent-toolkit-for-aws", "description": "Official, AWS-supported MCP servers, skills, and plugins to help AI agents build on AWS", "language": "Python", "totalStars": 1233, "totalForks": 115, "starsToday": 47, "source": "All", "descZh": "AWS 官方支持的 MCP 服务器和技能集，帮助 AI 代理在 AWS 上构建应用。", "trendLabel": "高速增长 🔥", "activityScore": 50, "categoryTag": "AI / Agent"}, {"rank": 10, "repo": "mukul975/Anthropic-Cybersecurity-Skills", "url": "https://github.com/mukul975/Anthropic-Cybersecurity-Skills", "description": "817 structured cybersecurity skills for AI agents", "language": "Python", "totalStars": 21586, "totalForks": 2479, "starsToday": 571, "source": "All", "descZh": "817 structured cybersecurity skills for AI agents", "trendLabel": "稳步增长 ⚡", "activityScore": 70, "categoryTag": "AI / Agent"}, {"rank": 11, "repo": "alibaba/page-agent", "url": "https://github.com/alibaba/page-agent", "description": "JavaScript in-page GUI agent. Control web interfaces with natural language.", "language": "TypeScript", "totalStars": 20147, "totalForks": 1731, "starsToday": 163, "source": "All", "descZh": "阿里巴巴开源的页内 GUI 代理，用自然语言控制网页界面。", "trendLabel": "成熟稳定 🏔️", "activityScore": 50, "categoryTag": "AI / Agent"}, {"rank": 12, "repo": "IceWhaleTech/CasaOS", "url": "https://github.com/IceWhaleTech/CasaOS", "description": "CasaOS - A simple, easy-to-use, elegant open-source Personal Cloud system.", "language": "Go", "totalStars": 35061, "totalForks": 2005, "starsToday": 223, "source": "All", "descZh": "CasaOS - A simple, easy-to-use, elegant open-source Personal Cloud system.", "trendLabel": "成熟稳定 🏔️", "activityScore": 60, "categoryTag": "通用"}, {"rank": 13, "repo": "opendatalab/MinerU", "url": "https://github.com/opendatalab/MinerU", "description": "Transforms complex documents like PDFs and Office docs into LLM-ready markdown/JSON", "language": "Python", "totalStars": 70019, "totalForks": 5914, "starsToday": 644, "source": "All", "descZh": "Transforms complex documents like PDFs and Office docs into LLM-ready markdown/JSON", "trendLabel": "成熟稳定 🏔️", "activityScore": 70, "categoryTag": "AI / Agent"}, {"rank": 14, "repo": "Free-TV/IPTV", "url": "https://github.com/Free-TV/IPTV", "description": "M3U Playlist for free TV channels", "language": "Python", "totalStars": 18376, "totalForks": 2690, "starsToday": 139, "source": "All", "descZh": "M3U Playlist for free TV channels", "trendLabel": "成熟稳定 🏔️", "activityScore": 50, "categoryTag": "通用"}, {"rank": 15, "repo": "shanraisshan/claude-code-best-practice", "url": "https://github.com/shanraisshan/claude-code-best-practice", "description": "from vibe coding to agentic engineering - practice makes claude perfect", "language": "HTML", "totalStars": 61017, "totalForks": 6094, "starsToday": 287, "source": "All", "descZh": "从 Vibe Coding 到 Agentic Engineering——Claude Code 最佳实践指南。", "trendLabel": "成熟稳定 🏔️", "activityScore": 60, "categoryTag": "AI / Agent"}, {"rank": 16, "repo": "NanmiCoder/MediaCrawler", "url": "https://github.com/NanmiCoder/MediaCrawler", "description": "小红书、抖音、快手、B站、微博、知乎爬虫", "language": "Python", "totalStars": 53189, "totalForks": 10956, "starsToday": 398, "source": "All", "descZh": "小红书、抖音、快手、B站、微博、知乎爬虫", "trendLabel": "成熟稳定 🏔️", "activityScore": 60, "categoryTag": "通用"}];
-const LANG_COLORS = {"Python": "#3572A5", "Rust": "#dea584", "TypeScript": "#3178c6", "JavaScript": "#f1e05a", "Go": "#00ADD8", "Swift": "#F05138", "Shell": "#89e051", "HTML": "#e34c26", "Kotlin": "#A97BFF", "Dart": "#00B4AB", "Batchfile": "#999"};
+const DATA = [{"rank": 1, "repo": "calesthio/OpenMontage", "description": "World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.", "language": "Python", "totalStars": 22947, "starsToday": 3434, "url": "https://github.com/calesthio/OpenMontage", "descZh": "首个开源 AI 视频制作系统。12 条流水线、52 个工具、500+ Agent 技能，把你的 AI 编程助手变成完整的视频制作工作室。", "trendLabel": "爆发期 🚀", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 2, "repo": "Panniantong/Agent-Reach", "description": "Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.", "language": "Python", "totalStars": 41798, "starsToday": 1547, "url": "https://github.com/Panniantong/Agent-Reach", "descZh": "让 AI 代理拥有看到整个互联网的能力。一个 CLI 读取和搜索 Twitter、Reddit、YouTube、GitHub、B站、小红书，零 API 费用。", "trendLabel": "高速增长 🔥", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 3, "repo": "google-labs-code/design.md", "description": "A format specification for describing a visual identity to coding agents. DESIGN.md gives agents a persistent, structured understanding of a design system.", "language": "TypeScript", "totalStars": 20358, "starsToday": 1475, "url": "https://github.com/google-labs-code/design.md", "descZh": "Google 官方 DESIGN.md 规范，让 AI 编程助手理解设计系统。", "trendLabel": "高速增长 🔥", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 4, "repo": "JCodesMore/ai-website-cloner-template", "description": "Clone any website with one command using AI coding agents", "language": "TypeScript", "totalStars": 20961, "starsToday": 1024, "url": "https://github.com/JCodesMore/ai-website-cloner-template", "descZh": "一条命令用 AI 编程助手克隆任何网站，支持 Claude Code、Cursor、Copilot 等。", "trendLabel": "高速增长 🔥", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 5, "repo": "kunchenguid/no-mistakes", "description": "git push no-mistakes", "language": "Go", "totalStars": 3105, "starsToday": 996, "url": "https://github.com/kunchenguid/no-mistakes", "descZh": "git push no-mistakes — 一个有趣的 Git 工具，让你的提交信息更加谨慎。", "trendLabel": "爆发期 🚀", "activityScore": 70, "categoryTag": "通用"}, {"rank": 6, "repo": "garrytan/gstack", "description": "Use Garry Tan's exact Claude Code setup: 23 opinionated tools that serve as CEO, Designer, Eng Manager, Release Manager, Doc Engineer, and QA", "language": "TypeScript", "totalStars": 116219, "starsToday": 767, "url": "https://github.com/garrytan/gstack", "descZh": "Y Combinator CEO Garry Tan 的 Claude Code 配置：23 个工具分别扮演 CEO、设计师、工程经理等角色。", "trendLabel": "成熟稳定 🏔️", "activityScore": 70, "categoryTag": "AI / Agent"}, {"rank": 7, "repo": "opendatalab/MinerU", "description": "Transforms complex documents like PDFs and Office docs into LLM-ready markdown/JSON for your Agentic workflows.", "language": "Python", "totalStars": 70023, "starsToday": 644, "url": "https://github.com/opendatalab/MinerU", "descZh": "将 PDF、Office 等复杂文档转换为 LLM 可用的 Markdown/JSON 格式。", "trendLabel": "成熟稳定 🏔️", "activityScore": 70, "categoryTag": "AI / Agent"}, {"rank": 8, "repo": "NanmiCoder/MediaCrawler", "description": "小红书笔记 | 评论爬虫、抖音视频 | 评论爬虫、快手视频 | 评论爬虫、B 站视频 ｜ 评论爬虫、微博帖子 ｜ 评论爬虫、百度贴吧帖子 ｜ 百度贴吧评论回复爬虫 | 知乎问答文章｜评论爬虫", "language": "Python", "totalStars": 53196, "starsToday": 398, "url": "https://github.com/NanmiCoder/MediaCrawler", "descZh": "小红书、抖音、快手、B站、微博、知乎多平台内容爬虫工具。", "trendLabel": "成熟稳定 🏔️", "activityScore": 60, "categoryTag": "通用"}, {"rank": 9, "repo": "xbtlin/ai-berkshire", "description": "AI 时代的伯克希尔：基于 Claude Code 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。| AI-era Berkshire: a value investing research framework built on Claude Code. 4 masters' methodologies + multi-agent adversarial analysis.", "language": "Python", "totalStars": 2753, "starsToday": 309, "url": "https://github.com/xbtlin/ai-berkshire", "descZh": "AI 时代的伯克希尔：基于 Claude Code 的价值投资研究框架，融合巴菲特、芒格等大师方法论。", "trendLabel": "爆发期 🚀", "activityScore": 60, "categoryTag": "AI / Agent"}, {"rank": 10, "repo": "mauriceboe/TREK", "description": "A self-hosted travel/trip planner with real-time collaboration, interactive maps, PWA support, SSO, budgets, packing lists, and more.", "language": "TypeScript", "totalStars": 7188, "starsToday": 241, "url": "https://github.com/mauriceboe/TREK", "descZh": "自托管旅行规划工具，支持实时协作、交互式地图、PWA、SSO、预算管理等功能。", "trendLabel": "高速增长 🔥", "activityScore": 60, "categoryTag": "通用"}];
+const ALL_REPOS = [{"rank": 1, "repo": "calesthio/OpenMontage", "description": "World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.", "language": "Python", "totalStars": 22947, "starsToday": 3434, "url": "https://github.com/calesthio/OpenMontage", "descZh": "首个开源 AI 视频制作系统。12 条流水线、52 个工具、500+ Agent 技能，把你的 AI 编程助手变成完整的视频制作工作室。", "trendLabel": "爆发期 🚀", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 2, "repo": "Panniantong/Agent-Reach", "description": "Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.", "language": "Python", "totalStars": 41798, "starsToday": 1547, "url": "https://github.com/Panniantong/Agent-Reach", "descZh": "让 AI 代理拥有看到整个互联网的能力。一个 CLI 读取和搜索 Twitter、Reddit、YouTube、GitHub、B站、小红书，零 API 费用。", "trendLabel": "高速增长 🔥", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 3, "repo": "google-labs-code/design.md", "description": "A format specification for describing a visual identity to coding agents. DESIGN.md gives agents a persistent, structured understanding of a design system.", "language": "TypeScript", "totalStars": 20358, "starsToday": 1475, "url": "https://github.com/google-labs-code/design.md", "descZh": "Google 官方 DESIGN.md 规范，让 AI 编程助手理解设计系统。", "trendLabel": "高速增长 🔥", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 4, "repo": "JCodesMore/ai-website-cloner-template", "description": "Clone any website with one command using AI coding agents", "language": "TypeScript", "totalStars": 20961, "starsToday": 1024, "url": "https://github.com/JCodesMore/ai-website-cloner-template", "descZh": "一条命令用 AI 编程助手克隆任何网站，支持 Claude Code、Cursor、Copilot 等。", "trendLabel": "高速增长 🔥", "activityScore": 80, "categoryTag": "AI / Agent"}, {"rank": 5, "repo": "kunchenguid/no-mistakes", "description": "git push no-mistakes", "language": "Go", "totalStars": 3105, "starsToday": 996, "url": "https://github.com/kunchenguid/no-mistakes", "descZh": "git push no-mistakes — 一个有趣的 Git 工具，让你的提交信息更加谨慎。", "trendLabel": "爆发期 🚀", "activityScore": 70, "categoryTag": "通用"}, {"rank": 6, "repo": "garrytan/gstack", "description": "Use Garry Tan's exact Claude Code setup: 23 opinionated tools that serve as CEO, Designer, Eng Manager, Release Manager, Doc Engineer, and QA", "language": "TypeScript", "totalStars": 116219, "starsToday": 767, "url": "https://github.com/garrytan/gstack", "descZh": "Y Combinator CEO Garry Tan 的 Claude Code 配置：23 个工具分别扮演 CEO、设计师、工程经理等角色。", "trendLabel": "成熟稳定 🏔️", "activityScore": 70, "categoryTag": "AI / Agent"}, {"rank": 7, "repo": "opendatalab/MinerU", "description": "Transforms complex documents like PDFs and Office docs into LLM-ready markdown/JSON for your Agentic workflows.", "language": "Python", "totalStars": 70023, "starsToday": 644, "url": "https://github.com/opendatalab/MinerU", "descZh": "将 PDF、Office 等复杂文档转换为 LLM 可用的 Markdown/JSON 格式。", "trendLabel": "成熟稳定 🏔️", "activityScore": 70, "categoryTag": "AI / Agent"}, {"rank": 8, "repo": "NanmiCoder/MediaCrawler", "description": "小红书笔记 | 评论爬虫、抖音视频 | 评论爬虫、快手视频 | 评论爬虫、B 站视频 ｜ 评论爬虫、微博帖子 ｜ 评论爬虫、百度贴吧帖子 ｜ 百度贴吧评论回复爬虫 | 知乎问答文章｜评论爬虫", "language": "Python", "totalStars": 53196, "starsToday": 398, "url": "https://github.com/NanmiCoder/MediaCrawler", "descZh": "小红书、抖音、快手、B站、微博、知乎多平台内容爬虫工具。", "trendLabel": "成熟稳定 🏔️", "activityScore": 60, "categoryTag": "通用"}, {"rank": 9, "repo": "xbtlin/ai-berkshire", "description": "AI 时代的伯克希尔：基于 Claude Code 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。| AI-era Berkshire: a value investing research framework built on Claude Code. 4 masters' methodologies + multi-agent adversarial analysis.", "language": "Python", "totalStars": 2753, "starsToday": 309, "url": "https://github.com/xbtlin/ai-berkshire", "descZh": "AI 时代的伯克希尔：基于 Claude Code 的价值投资研究框架，融合巴菲特、芒格等大师方法论。", "trendLabel": "爆发期 🚀", "activityScore": 60, "categoryTag": "AI / Agent"}, {"rank": 10, "repo": "mauriceboe/TREK", "description": "A self-hosted travel/trip planner with real-time collaboration, interactive maps, PWA support, SSO, budgets, packing lists, and more.", "language": "TypeScript", "totalStars": 7188, "starsToday": 241, "url": "https://github.com/mauriceboe/TREK", "descZh": "自托管旅行规划工具，支持实时协作、交互式地图、PWA、SSO、预算管理等功能。", "trendLabel": "高速增长 🔥", "activityScore": 60, "categoryTag": "通用"}, {"rank": 11, "repo": "IceWhaleTech/CasaOS", "description": "CasaOS - A simple, easy-to-use, elegant open-source Personal Cloud system.", "language": "Go", "totalStars": 35065, "starsToday": 223, "url": "https://github.com/IceWhaleTech/CasaOS", "descZh": "简单易用的开源个人云系统，支持 Docker 应用管理。", "trendLabel": "成熟稳定 🏔️", "activityScore": 60, "categoryTag": "通用"}, {"rank": 12, "repo": "alchaincyf/zhangxuefeng-skill", "description": "张雪峰.skill — 张雪峰的认知操作系统。高考志愿/考研/职业规划的实战思维框架。由女娲.skill生成。", "language": "N/A", "totalStars": 9134, "starsToday": 220, "url": "https://github.com/alchaincyf/zhangxuefeng-skill", "descZh": "张雪峰.skill — 张雪峰的认知操作系统，高考志愿/考研/职业规划的实战思维框架。", "trendLabel": "稳步增长 ⚡", "activityScore": 60, "categoryTag": "通用"}, {"rank": 13, "repo": "simplex-chat/simplex-chat", "description": "SimpleX - the first messaging network operating without user identifiers of any kind - 100% private by design! iOS, Android and desktop apps 📱!", "language": "Haskell", "totalStars": 11670, "starsToday": 191, "url": "https://github.com/simplex-chat/simplex-chat", "descZh": "SimpleX - 首个完全无需用户标识的即时通讯网络，100% 隐私设计！支持 iOS、Android 和桌面应用。", "trendLabel": "稳步增长 ⚡", "activityScore": 50, "categoryTag": "通用"}, {"rank": 14, "repo": "commaai/openpilot", "description": "openpilot is an operating system for robotics. Currently, it upgrades the driver assistance system on 300+ supported cars.", "language": "Python", "totalStars": 61604, "starsToday": 67, "url": "https://github.com/commaai/openpilot", "descZh": "openpilot 是一个机器人操作系统，目前为 300+ 款车型提供驾驶辅助升级。", "trendLabel": "成熟稳定 🏔️", "activityScore": 50, "categoryTag": "通用"}, {"rank": 15, "repo": "ripienaar/free-for-dev", "description": "A list of SaaS, PaaS and IaaS offerings that have free tiers of interest to devops and infradev", "language": "HTML", "totalStars": 123482, "starsToday": 48, "url": "https://github.com/ripienaar/free-for-dev", "descZh": "开发者免费资源清单，包含 SaaS、PaaS 和 IaaS 的免费套餐。", "trendLabel": "成熟稳定 🏔️", "activityScore": 50, "categoryTag": "开发工具"}, {"rank": 16, "repo": "aws/agent-toolkit-for-aws", "description": "Official, AWS-supported MCP servers, skills, and plugins to help AI agents build on AWS", "language": "Python", "totalStars": 1243, "starsToday": 47, "url": "https://github.com/aws/agent-toolkit-for-aws", "descZh": "AWS 官方支持的 MCP 服务器和技能集，帮助 AI 代理在 AWS 上构建应用。", "trendLabel": "高速增长 🔥", "activityScore": 50, "categoryTag": "AI / Agent"}, {"rank": 17, "repo": "grafana/grafana", "description": "The open and composable observability and data visualization platform. Visualize metrics, logs, and traces from multiple sources like Prometheus, Loki, Elasticsearch, InfluxDB, Postgres and many more.", "language": "TypeScript", "totalStars": 74697, "starsToday": 17, "url": "https://github.com/grafana/grafana", "descZh": "开源可观测性和数据可视化平台，支持 Prometheus、Loki、Elasticsearch 等多种数据源。", "trendLabel": "成熟稳定 🏔️", "activityScore": 50, "categoryTag": "通用"}];
+const LANG_COLORS = {"Python": "#3572A5", "Rust": "#dea584", "TypeScript": "#3178c6", "JavaScript": "#f1e05a", "Go": "#00ADD8", "Swift": "#F05138", "Shell": "#89e051", "HTML": "#e34c26", "Kotlin": "#A97BFF", "Dart": "#00B4AB", "Batchfile": "#999", "Haskell": "#5e5086"};
 
 let currentSlide = 0;
 let touchStartX = 0;
+let touchDeltaX = 0;
 
-function getTrendClass(l) {
-  if (l.includes('爆发') || l.includes('高速')) return 'hot';
-  if (l.includes('稳步')) return 'warm';
+function getTrendClass(label) {
+  if (label.includes('爆发') || label.includes('高速')) return 'hot';
+  if (label.includes('稳步')) return 'warm';
   return 'cool';
 }
 
-function getLangColor(l) { return LANG_COLORS[l] || '#999'; }
+function getLangColor(lang) {
+  return LANG_COLORS[lang] || '#999';
+}
 
-function getScoreColor(s) {
-  if (s >= 60) return '#346538';
-  if (s >= 30) return '#8B5A2B';
+function getScoreColor(score) {
+  if (score >= 60) return '#346538';
+  if (score >= 30) return '#8B5A2B';
   return '#9B9B9B';
 }
 
-function esc(s) {
-  if (!s) return '';
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
 function buildSlides() {
-  const c = document.getElementById('carousel');
-  DATA.forEach((r, i) => {
-    const s = document.createElement('div');
-    s.className = 'slide' + (i === 0 ? ' active' : '');
-    const img = r.ogImage || '';
-    const init = (r.repo.split('/')[1] || '?')[0].toUpperCase();
-    const lc = getLangColor(r.language);
-    const desc = esc(r.descZh || r.aboutDesc || r.description || '');
-
-    let topicsHtml = '';
-    const topics = (r.topics || []).slice(0, 6);
-    if (topics.length) {
-      topicsHtml = '<div class="topics">' + topics.map(t =>
-        '<span class="topic-tag">' + esc(t.name || t) + '</span>'
-      ).join('') + '</div>';
-    }
-
-    let avatarsHtml = '';
-    const avatars = r.contributorAvatars || [];
-    if (avatars.length) {
-      avatarsHtml = '<div class="avatars-row">' + avatars.map(u =>
-        '<img src="' + esc(u) + '" loading="lazy" onerror="this.style.display=\'none\'">'
-      ).join('');
-      if (r.contributors > 5) {
-        avatarsHtml += '<span style="font-size:12px;color:var(--text-muted);margin-left:8px">+' + (r.contributors - 5) + ' more</span>';
-      }
-      avatarsHtml += '</div>';
-    }
-
-    let leftHtml;
-    if (img) {
-      leftHtml = '<img src="' + esc(img) + '" alt="' + esc(r.repo) + '" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'fallback\\\' style=\\\'background:' + lc + '\\\'>' + init + '</div>\'">';
-    } else {
-      leftHtml = '<div class="fallback" style="background:' + lc + '">' + init + '</div>';
-    }
-
-    let extraStats = '';
-    if (r.releaseVersion) extraStats += '<div class="stat-item">版本 <strong>' + esc(r.releaseVersion) + '</strong></div>';
-    if (r.lastCommit) extraStats += '<div class="stat-item">最近提交 <strong>' + new Date(r.lastCommit).toLocaleDateString('zh-CN') + '</strong></div>';
-
-    s.innerHTML =
-      '<div class="slide-left">' + leftHtml + '</div>' +
-      '<div class="slide-right">' +
-        '<div class="badge-row">' +
-          '<span class="lang-badge"><span class="lang-dot" style="background:' + lc + '"></span>' + esc(r.language || 'N/A') + '</span>' +
-          '<span class="trend-badge ' + getTrendClass(r.trendLabel) + '">' + esc(r.trendLabel) + '</span>' +
-          '<span class="category-badge">' + esc(r.categoryTag) + '</span>' +
-        '</div>' +
-        '<h1 class="repo-name"><a href="' + esc(r.url) + '" target="_blank">' + esc(r.repo) + '</a></h1>' +
-        '<p class="one-liner">' + desc + '</p>' +
-        topicsHtml +
-        '<div class="stars-row">' +
-          '<span class="stars-total">⭐ ' + (r.totalStars || 0).toLocaleString() + '</span>' +
-          '<span class="stars-today">+' + (r.starsToday || 0).toLocaleString() + ' today</span>' +
-        '</div>' +
-        avatarsHtml +
-        '<div class="stats-grid">' +
-          '<div class="stat-item">活跃度 <strong>' + (r.activityScore || 0) + '/100</strong><div class="activity-bar"><div class="activity-fill" style="width:' + (r.activityScore || 0) + '%;background:' + getScoreColor(r.activityScore || 0) + '"></div></div></div>' +
-          '<div class="stat-item">Issues <strong>' + (r.openIssues || 0) + '</strong> · PRs <strong>' + (r.openPRs || 0) + '</strong></div>' +
-          extraStats +
-        '</div>' +
-      '</div>';
-    c.appendChild(s);
+  const carousel = document.getElementById('carousel');
+  DATA.forEach((repo, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'slide' + (i === 0 ? ' active' : '');
+    slide.dataset.index = i;
+    
+    const ogImg = repo.ogImage || '';
+    const initial = repo.repo.split('/')[1]?.[0]?.toUpperCase() || '?';
+    const langColor = getLangColor(repo.language);
+    
+    const topics = (repo.topics || []).slice(0, 6).map(t => 
+      `<span class="topic-tag">${t.name || t}</span>`
+    ).join('');
+    
+    const avatars = (repo.contributorAvatars || []).map(url => 
+      `<img src="${url}" alt="" loading="lazy" onerror="this.style.display='none'">`
+    ).join('');
+    
+    slide.innerHTML = `
+      <div class="slide-left">
+        ${ogImg 
+          ? `<img src="${ogImg}" alt="${repo.repo}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'fallback\' style=\'background:${langColor}\'>${initial}</div>'">`
+          : `<div class="fallback" style="background:${langColor}">${initial}</div>`
+        }
+      </div>
+      <div class="slide-right">
+        <div class="badge-row">
+          <span class="lang-badge"><span class="lang-dot" style="background:${langColor}"></span>${repo.language || 'N/A'}</span>
+          <span class="trend-badge ${getTrendClass(repo.trendLabel)}">${repo.trendLabel}</span>
+          <span class="category-badge">${repo.categoryTag}</span>
+        </div>
+        <h1 class="repo-name"><a href="${repo.url}" target="_blank">${repo.repo}</a></h1>
+        <p class="one-liner">${repo.descZh || repo.description || ''}</p>
+        ${topics ? `<div class="topics">${topics}</div>` : ''}
+        <div class="stars-row">
+          <span class="stars-total">⭐ ${(repo.totalStars || 0).toLocaleString()}</span>
+          <span class="stars-today">+${(repo.starsToday || 0).toLocaleString()} today</span>
+        </div>
+        ${avatars ? `<div class="avatars-row">${avatars}${repo.contributors > 5 ? `<span style="font-size:12px;color:var(--text-muted);margin-left:8px">+${repo.contributors - 5} more</span>` : ''}</div>` : ''}
+        <div class="stats-grid">
+          <div class="stat-item">活跃度 <strong>${repo.activityScore || 0}/100</strong>
+            <div class="activity-bar"><div class="activity-fill" style="width:${repo.activityScore || 0}%;background:${getScoreColor(repo.activityScore || 0)}"></div></div>
+          </div>
+          <div class="stat-item">Issues <strong>${repo.openIssues || 0}</strong> · PRs <strong>${repo.openPRs || 0}</strong></div>
+          ${repo.releaseVersion ? `<div class="stat-item">版本 <strong>${repo.releaseVersion}</strong></div>` : ''}
+          ${repo.lastCommit ? `<div class="stat-item">最近提交 <strong>${new Date(repo.lastCommit).toLocaleDateString('zh-CN')}</strong></div>` : ''}
+        </div>
+      </div>
+    `;
+    carousel.appendChild(slide);
   });
 }
 
-function goToSlide(i) {
-  const ss = document.querySelectorAll('.slide');
-  if (i < 0 || i >= ss.length) return;
-  ss.forEach((s, j) => {
+function goToSlide(index) {
+  const slides = document.querySelectorAll('.slide');
+  if (index < 0 || index >= slides.length) return;
+  
+  slides.forEach((s, i) => {
     s.classList.remove('active', 'prev');
-    if (j === i) s.classList.add('active');
-    else if (j < i) s.classList.add('prev');
+    if (i === index) s.classList.add('active');
+    else if (i < index) s.classList.add('prev');
   });
-  currentSlide = i;
-  document.getElementById('current').textContent = i + 1;
+  
+  currentSlide = index;
+  document.getElementById('current').textContent = index + 1;
 }
 
 function toggleDrawer() {
@@ -203,42 +466,52 @@ function toggleDrawer() {
 }
 
 function buildDrawer() {
-  const l = document.getElementById('drawer-list');
-  ALL_REPOS.forEach(r => {
-    const d = document.createElement('div');
-    d.className = 'drawer-item';
-    d.innerHTML =
-      '<div class="drawer-repo"><a href="' + esc(r.url) + '" target="_blank">' + esc(r.repo) + '</a></div>' +
-      '<div class="drawer-desc">' + esc(r.description || '') + '</div>' +
-      '<div class="drawer-meta">' +
-        '<span><span class="lang-dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + getLangColor(r.language) + ';vertical-align:middle;margin-right:4px"></span>' + esc(r.language || 'N/A') + '</span>' +
-        '<span>⭐ ' + (r.totalStars || 0).toLocaleString() + '</span>' +
-        '<span style="color:var(--accent-green-text)">+' + (r.starsToday || 0).toLocaleString() + '</span>' +
-      '</div>';
-    l.appendChild(d);
+  const list = document.getElementById('drawer-list');
+  ALL_REPOS.forEach(repo => {
+    const item = document.createElement('div');
+    item.className = 'drawer-item';
+    item.innerHTML = `
+      <div class="drawer-repo">
+        <a href="${repo.url}" target="_blank">${repo.repo}</a>
+      </div>
+      <div class="drawer-desc">${repo.description || ''}</div>
+      <div class="drawer-meta">
+        <span><span class="lang-dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${getLangColor(repo.language)};vertical-align:middle;margin-right:4px"></span>${repo.language || 'N/A'}</span>
+        <span>⭐${(repo.totalStars || 0).toLocaleString()}</span>
+        <span style="color:var(--accent-green-text)">+${(repo.starsToday || 0).toLocaleString()}</span>
+      </div>
+    `;
+    list.appendChild(item);
   });
 }
 
 // Touch/mouse swipe
 const carousel = document.getElementById('carousel');
-carousel.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+carousel.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive: true});
 carousel.addEventListener('touchend', e => {
-  const d = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(d) > 50) goToSlide(currentSlide + (d < 0 ? 1 : -1));
+  touchDeltaX = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(touchDeltaX) > 50) {
+    goToSlide(currentSlide + (touchDeltaX < 0 ? 1 : -1));
+  }
 });
 carousel.addEventListener('mousedown', e => { touchStartX = e.clientX; });
 carousel.addEventListener('mouseup', e => {
-  const d = e.clientX - touchStartX;
-  if (Math.abs(d) > 50) goToSlide(currentSlide + (d < 0 ? 1 : -1));
+  touchDeltaX = e.clientX - touchStartX;
+  if (Math.abs(touchDeltaX) > 50) {
+    goToSlide(currentSlide + (touchDeltaX < 0 ? 1 : -1));
+  }
 });
 
 // Keyboard
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goToSlide(currentSlide + 1);
   if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goToSlide(currentSlide - 1);
-  if (e.key === 'Escape' && document.getElementById('drawer').classList.contains('open')) toggleDrawer();
+  if (e.key === 'Escape') {
+    if (document.getElementById('drawer').classList.contains('open')) toggleDrawer();
+  }
 });
 
+// Init
 buildSlides();
 buildDrawer();
 document.getElementById('total').textContent = DATA.length;
